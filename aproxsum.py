@@ -5,7 +5,7 @@ __author__ = 'mail@pythonic.ninja'
 # Polynolmial aprox sum 1091 CORMEN
 
 DEBUG = True
-LOG_LEVEL = 2
+LOG_LEVEL = 1
 
 def log(*args, **kwargs):
     log_level = kwargs.get('log_level', 0)
@@ -14,17 +14,16 @@ def log(*args, **kwargs):
 
 
 def trim(L, r):
-    # m = len(L)
     L1 = [L[0]]
-    last = L[0]
-    for li in L:
-        if last < (1 - r) * li:
-            L1.append(li)
-            last = li
+    last = L1[-1]
+    for yi in L:
+        if last < (1 - r) * yi:
+            L1.append(yi)
+            last = yi
     return L1
 
 
-log('\ntrim:\t', trim([1, 104], 0.05), log_level=1)
+log('\ntrim:\t', trim([0, 102, 201, 302, 303, 407], 0.05), log_level=1)
 
 
 def merge_list(L1, L2):
@@ -49,25 +48,30 @@ log('\nmerge_list:\t', merge_list([1, 2, 3], [4, 5, 6]), log_level=1)
 
 def approx_subset_sum(S, t, e):
     n = len(S)
-    L0 = [[x] for x in range(1)]
+    L = [[0]]
 
     for i in xrange(1, n+1):
-        log(i, L0, L0[i-1], S[i-1])
-        item = merge_list(L0[i-1], [item + S[i-1] for item in L0[i-1]])
+        log(i, L, L[i-1], S[i-1])
+        item = merge_list(L[i-1], [item + S[i-1] for item in L[i-1]])
         log(item)
 
-        L0.append(item)
+        L.append(item)
 
         log(i, log_level=2)
-        log('Merge:\t', L0[i], log_level=2)
-        L0[i] = trim(L0[i], 0.05)
-        log('Trim:\t', L0[i], log_level=2)
-        L0[i] = [item for item in L0[i] if item < t]
-        log('Remove:\t', L0[i], log_level=2)
+        log('Merge:\t', L[i], log_level=2)
+        L[i] = trim(L[i], e/n)
+        log('Trim:\t', L[i], log_level=2)
+        L[i] = [item for item in L[i] if item < t]
+        log('Remove:\t', L[i], log_level=2)
         log('', log_level=2)
 
-        log(L0, log_level=1)
+        log(L, log_level=1)
 
-    return L0[n]
+    return L[-1][-1], L[-1][1:-1]
 
-print(approx_subset_sum([104, 102, 201, 101], 308, 0.20))
+suma, choices = approx_subset_sum([104, 102, 201, 101], 308, 0.20)
+
+print
+print('Sigma    = %s = %s' % (suma, "+".join([str(choice) for choice in choices])))
+print('Optiomal = %s = %s' % (307, "+".join([str(choice) for choice in [104, 102, 101]])))
+
