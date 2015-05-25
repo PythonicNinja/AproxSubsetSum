@@ -26,10 +26,6 @@ def trim(L, r):
 
 log('\ntrim:\t', trim([1, 104], 0.05), log_level=1)
 
-def increase_list(L, value):
-    return [entry + value for entry in L]
-
-log('\nincrease_list\t', increase_list([1, 2, 3], 2), log_level=1)
 
 def merge_list(L1, L2):
     result = []
@@ -57,7 +53,7 @@ def approx_subset_sum(S, t, e):
 
     for i in xrange(1, n+1):
         log(i, L0, L0[i-1], S[i-1])
-        item = merge_list(L0[i-1], increase_list(L0[i-1], S[i-1]))
+        item = merge_list(L0[i-1], [item + S[i-1] for item in L0[i-1]])
         log(item)
 
         L0.append(item)
