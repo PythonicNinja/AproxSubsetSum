@@ -4,6 +4,8 @@ __author__ = 'mail@pythonic.ninja'
 
 # Polynolmial aprox sum 1091 CORMEN
 
+from heapq import merge
+
 DEBUG = True
 LOG_LEVEL = 1
 
@@ -11,7 +13,6 @@ def log(*args, **kwargs):
     log_level = kwargs.get('log_level', 0)
     if DEBUG and log_level >= LOG_LEVEL:
         print " ".join([str(arg) for arg in args])
-
 
 def trim(L, r):
     L1 = [L[0]]
@@ -25,26 +26,8 @@ def trim(L, r):
 
 log('\ntrim:\t', trim([0, 102, 201, 302, 303, 407], 0.05), log_level=1)
 
-
-def merge_list(L1, L2):
-    result = []
-    il, ir = 0, 0
-    while il < len(L1) and ir < len(L2):
-        log(il, ir)
-        if L1[il] < L2[ir]:
-            il += 1
-            result.append(L1[il-1])
-        else:
-            ir += 1
-            result.append(L2[ir-1])
-        log(result)
-
-    log(il, ir)
-    log(result, L1, L2, L1[il:], L2[ir:])
-    result += L1[il:] + L2[ir:]
-    return result
-
-log('\nmerge_list:\t', merge_list([1, 2, 3], [4, 5, 6]), log_level=1)
+log('\nmerge_list:\t', merge([1, 2, 3], [4, 5, 6]), log_level=1)
+log('\nmerge_list:\t', merge([1, 4], [2, 3, 5, 6]), log_level=1)
 
 def approx_subset_sum(S, t, e):
     n = len(S)
@@ -52,7 +35,7 @@ def approx_subset_sum(S, t, e):
 
     for i in xrange(1, n+1):
         log(i, L, L[i-1], S[i-1])
-        item = merge_list(L[i-1], [item + S[i-1] for item in L[i-1]])
+        item = list(merge(L[i-1], [item + S[i-1] for item in L[i-1]]))
         log(item)
 
         L.append(item)
